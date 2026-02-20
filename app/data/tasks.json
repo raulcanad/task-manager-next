@@ -1,5 +1,17 @@
 [
-  { "id": 1, "title": "Aprender Next.js", "completed": false },
-  { "id": 2, "title": "Crear API Routes", "completed": true },
-  { "id": 3, "title": "Desplegar en Vercel", "completed": false }
+  {
+    "id": 2,
+    "title": "Tarea de prueba 2",
+    "completed": true
+  },
+  {
+    "id": 3,
+    "title": "Tarea de prueba 3",
+    "completed": true
+  },
+  {
+    "id": 4,
+    "title": "5",
+    "completed": false
+  }
 ]

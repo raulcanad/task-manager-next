@@ -33,14 +33,14 @@ export default function TaskForm({ onAddTask }: TaskFormProps) {
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Nueva tarea..."
         disabled={isSubmitting}
-        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+        className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#667eea] focus:ring-2 focus:ring-[#667eea]/20 transition-all disabled:bg-gray-100 text-gray-700"
       />
       <button
         type="submit"
         disabled={isSubmitting || !title.trim()}
-        className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+        className="px-6 py-3 bg-[#667eea] text-white rounded-lg hover:bg-[#5a67d8] transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
       >
-        {isSubmitting ? '...' : 'Añadir'}
+        {isSubmitting ? 'Añadiendo...' : 'Añadir'}
       </button>
     </form>
   );

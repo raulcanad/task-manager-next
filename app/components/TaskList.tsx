@@ -10,28 +10,32 @@ interface TaskListProps {
 
 export default function TaskList({ tasks, onToggleTask, onDeleteTask }: TaskListProps) {
   if (tasks.length === 0) {
-    return <p className="text-gray-500 text-center py-8">¡Añade tu primera tarea!</p>;
+    return (
+      <p className="text-center text-white bg-white/20 rounded-lg py-12 backdrop-blur-sm">
+        ¡Añade tu primera tarea!
+      </p>
+    );
   }
 
   return (
-    <ul className="bg-white rounded-lg shadow overflow-hidden">
+    <ul className="bg-white rounded-lg shadow-lg overflow-hidden">
       {tasks.map(task => (
         <li
           key={task.id}
-          className="flex items-center p-4 border-b border-gray-100 hover:bg-gray-50 transition"
+          className="flex items-center p-4 border-b border-gray-100 hover:bg-gray-50 transition-all hover:translate-x-1"
         >
           <input
             type="checkbox"
             checked={task.completed}
             onChange={() => onToggleTask(task.id)}
-            className="w-5 h-5 mr-3 accent-blue-500 cursor-pointer"
+            className="w-5 h-5 mr-3 accent-[#667eea] cursor-pointer hover:scale-110 transition"
           />
           <span className={`flex-1 ${task.completed ? 'line-through text-gray-400' : 'text-gray-700'}`}>
             {task.title}
           </span>
           <button
             onClick={() => onDeleteTask(task.id)}
-            className="text-red-500 hover:text-red-700 text-xl font-bold transition"
+            className="text-red-400 hover:text-red-600 text-2xl font-bold transition hover:scale-110"
           >
             ×
           </button>

@@ -75,15 +75,15 @@ export default function Home() {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center">
       <p className="text-white text-xl">Cargando...</p>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600">
-      <header className="bg-white shadow-lg py-8">
-        <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#667eea] to-[#764ba2]">
+      <header className="bg-white/95 backdrop-blur-sm shadow-lg py-8">
+        <div className="container mx-auto px-4 max-w-4xl">
           <h1 className="text-4xl font-bold text-center text-gray-800">📋 Gestor de Tareas</h1>
           <p className="text-center text-gray-600 mt-2">Next.js + TypeScript + Tailwind</p>
         </div>
@@ -99,17 +99,17 @@ export default function Home() {
         <TaskForm onAddTask={addTask} />
         <TaskList tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} />
         
-        <div className="mt-6 grid grid-cols-3 gap-4">
-          <div className="bg-white rounded-lg shadow p-3 text-center">
-            <span className="text-gray-600">Total</span>
+        <div className="mt-8 grid grid-cols-3 gap-4">
+          <div className="bg-white rounded-lg shadow-lg p-4 text-center">
+            <span className="text-gray-600 text-sm">Total</span>
             <p className="text-2xl font-bold text-gray-800">{tasks.length}</p>
           </div>
-          <div className="bg-green-50 rounded-lg shadow p-3 text-center">
-            <span className="text-green-600">Completadas</span>
+          <div className="bg-white rounded-lg shadow-lg p-4 text-center">
+            <span className="text-green-600 text-sm">Completadas</span>
             <p className="text-2xl font-bold text-green-700">{tasks.filter(t => t.completed).length}</p>
           </div>
-          <div className="bg-yellow-50 rounded-lg shadow p-3 text-center">
-            <span className="text-yellow-600">Pendientes</span>
+          <div className="bg-white rounded-lg shadow-lg p-4 text-center">
+            <span className="text-yellow-600 text-sm">Pendientes</span>
             <p className="text-2xl font-bold text-yellow-700">{tasks.filter(t => !t.completed).length}</p>
           </div>
         </div>
