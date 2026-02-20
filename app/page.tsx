@@ -1,63 +1,117 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useEffect } from 'react';
+import TaskList from './components/TaskList';
+import TaskForm from './components/TaskForm';
+import { Task } from './types';
 
 export default function Home() {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    try {
+      const res = await fetch('/api/tasks');
+      if (!res.ok) throw new Error('Error al cargar');
+      const data = await res.json();
+      setTasks(data);
+    } catch (err) {
+      setError('Error al cargar las tareas');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addTask = async (title: string) => {
+    try {
+      const res = await fetch('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title })
+      });
+      
+      if (!res.ok) throw new Error('Error al añadir');
+      
+      const newTask = await res.json();
+      setTasks([...tasks, newTask]);
+      setError(null);
+    } catch (err) {
+      setError('Error al añadir tarea');
+    }
+  };
+
+  const toggleTask = async (id: number) => {
+    try {
+      const res = await fetch(`/api/tasks/${id}`, {
+        method: 'PUT'
+      });
+      
+      if (!res.ok) throw new Error('Error al actualizar');
+      
+      const updatedTask = await res.json();
+      setTasks(tasks.map(t => t.id === id ? updatedTask : t));
+    } catch (err) {
+      setError('Error al actualizar');
+    }
+  };
+
+  const deleteTask = async (id: number) => {
+    try {
+      const res = await fetch(`/api/tasks/${id}`, {
+        method: 'DELETE'
+      });
+      
+      if (!res.ok) throw new Error('Error al eliminar');
+      
+      setTasks(tasks.filter(t => t.id !== id));
+    } catch (err) {
+      setError('Error al eliminar');
+    }
+  };
+
+  if (loading) return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+      <p className="text-white text-xl">Cargando...</p>
+    </div>
+  );
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600">
+      <header className="bg-white shadow-lg py-8">
+        <div className="container mx-auto px-4">
+          <h1 className="text-4xl font-bold text-center text-gray-800">📋 Gestor de Tareas</h1>
+          <p className="text-center text-gray-600 mt-2">Next.js + TypeScript + Tailwind</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </header>
+
+      <main className="container mx-auto px-4 py-8 max-w-2xl">
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
+            {error}
+          </div>
+        )}
+
+        <TaskForm onAddTask={addTask} />
+        <TaskList tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} />
+        
+        <div className="mt-6 grid grid-cols-3 gap-4">
+          <div className="bg-white rounded-lg shadow p-3 text-center">
+            <span className="text-gray-600">Total</span>
+            <p className="text-2xl font-bold text-gray-800">{tasks.length}</p>
+          </div>
+          <div className="bg-green-50 rounded-lg shadow p-3 text-center">
+            <span className="text-green-600">Completadas</span>
+            <p className="text-2xl font-bold text-green-700">{tasks.filter(t => t.completed).length}</p>
+          </div>
+          <div className="bg-yellow-50 rounded-lg shadow p-3 text-center">
+            <span className="text-yellow-600">Pendientes</span>
+            <p className="text-2xl font-bold text-yellow-700">{tasks.filter(t => !t.completed).length}</p>
+          </div>
         </div>
       </main>
     </div>
